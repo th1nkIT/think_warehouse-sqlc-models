@@ -1,7 +1,7 @@
 NO_COLOR=\033[0m
 OK_COLOR=\033[32;01m
 PG_MIGRATIONS_FOLDER=./scripts/pgbo/migrations
-PG_DB_URL=postgresql://postgres:postgres@127.0.0.1:5432/think_laundry-dev?sslmode=disable
+PG_DB_URL=postgresql://postgres:postgres@localhost:5432/think_laundry-dev?sslmode=disable
 
 CMD_SQLC := $(shell command -v sqlc 2> /dev/null)
 CMD_MIGRATE := $(shell command -v migrate 2> /dev/null)

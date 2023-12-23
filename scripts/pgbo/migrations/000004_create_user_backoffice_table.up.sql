@@ -30,5 +30,5 @@ CREATE TABLE IF NOT EXISTS user_backoffice
 
 INSERT INTO
      user_backoffice("guid", "name", "profile_picture_image_url", "phone", "email", "role_id", "password", "salt", "is_active", "created_at", "created_by")
-     VALUES ('31eb7f5b-1ddd-4746-9930-efa89951e8c3', 'Super Admin WIT', NULL, '+6281122334455', 'admin@wit.id', 1, 'ba0ac3dc230b79c22a7159ab0bfafd74dd658080', 'Ae5Xn', 't', (now() at time zone 'UTC')::TIMESTAMP, 'System')
+     VALUES ('31eb7f5b-1ddd-4746-9930-efa89951e8c3', 'Super Admin', NULL, '+6281122334455', 'admin@think.it', 1, 'ba0ac3dc230b79c22a7159ab0bfafd74dd658080', 'Ae5Xn', 't', (now() at time zone 'UTC')::TIMESTAMP, 'System')
 ON CONFLICT DO NOTHING;
