@@ -35,7 +35,7 @@ ORDER BY (CASE WHEN @order_param = 'id ASC' THEN guid END) ASC,
          (CASE WHEN @order_param = 'role_id DESC' THEN description END) DESC,
          (CASE WHEN @order_param = 'created_at ASC' THEN created_at END) ASC,
          (CASE WHEN @order_param = 'created_at DESC' THEN created_at END) DESC,
-         ub.created_at DESC
+         product.created_at DESC
 LIMIT @limit_data
 OFFSET @offset_page;
 

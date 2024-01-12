@@ -27,27 +27,32 @@ SET deleted_at = (now() at time zone 'UTC')::TIMESTAMP,
     deleted_by = @new_deleted_by
 WHERE guid = @guid;
 
--- name: ListWithFilterWarehouse :many
+-- name: ListWithFilterProductHistory :many
 SELECT *
-FROM warehouse
+FROM products_history
 WHERE
-    (CASE WHEN @set_name::bool THEN LOWER(name) LIKE LOWER(@name) ELSE TRUE END)
-    AND(CASE WHEN @set_address::bool THEN LOWER(address) LIKE LOWER(@address) ELSE TRUE END)
-    AND(CASE WHEN @set_phone_number::bool THEN LOWER(phone_number) LIKE LOWER(@phone_number) ELSE TRUE END)
+    (CASE WHEN @set_pegawai_masuk::bool THEN LOWER(pegawai_masuk) LIKE LOWER(@pegawai_masuk) ELSE TRUE END)
+    AND(CASE WHEN @set_pegawai_keluar::bool THEN LOWER(pegawai_keluar) LIKE LOWER(@pegawai_keluar) ELSE TRUE END)
     AND deleted_at IS NULL
 ORDER BY (CASE WHEN @order_param = 'id ASC' THEN guid END) ASC,
          (CASE WHEN @order_param = 'id DESC' THEN guid END) DESC,
-         (CASE WHEN @order_param = 'name ASC' THEN name END) ASC,
-         (CASE WHEN @order_param = 'name DESC' THEN name END) DESC,
-         (CASE WHEN @order_param = 'address ASC' THEN address END) ASC,
-         (CASE WHEN @order_param = 'address DESC' THEN address END) DESC,
-         (CASE WHEN @order_param = 'phone_number ASC' THEN phone_number END) ASC,
-         (CASE WHEN @order_param = 'phone_number DESC' THEN phone_number END) DESC,
-         (CASE WHEN @order_param = 'is_active ASC' THEN is_active END) ASC,
-         (CASE WHEN @order_param = 'is_active DESC' THEN is_active END) DESC,
+         (CASE WHEN @order_param = 'product id ASC' THEN product_guid END) ASC,
+         (CASE WHEN @order_param = 'product id DESC' THEN product_guid END) DESC,
+         (CASE WHEN @order_param = 'quantity ASC' THEN quantity END) ASC,
+         (CASE WHEN @order_param = 'quantity DESC' THEN quantity END) DESC,
+         (CASE WHEN @order_param = 'warehouse id ASC' THEN warehouse_guid END) ASC,
+         (CASE WHEN @order_param = 'warehouse id DESC' THEN warehouse_guid END) DESC,
+         (CASE WHEN @order_param = 'tanggal masuk ASC' THEN tgl_masuk END) ASC,
+         (CASE WHEN @order_param = 'tanggal masuk DESC' THEN tgl_masuk END) DESC,
+         (CASE WHEN @order_param = 'pegawai masuk DESC' THEN pegawai_masuk END) DESC,
+         (CASE WHEN @order_param = 'pegawai masuk ASC' THEN pegawai_masuk END) ASC,
+         (CASE WHEN @order_param = 'tanggal keluar ASC' THEN tgl_keluar END) ASC,
+         (CASE WHEN @order_param = 'tanggal keluar DESC' THEN tgl_keluar END) DESC,
+         (CASE WHEN @order_param = 'pegawai keluar DESC' THEN pegawai_keluar END) DESC,
+         (CASE WHEN @order_param = 'pegawai keluar ASC' THEN pegawai_keluar END) ASC,
          (CASE WHEN @order_param = 'created_at ASC' THEN created_at END) ASC,
          (CASE WHEN @order_param = 'created_at DESC' THEN created_at END) DESC,
-         ub.created_at DESC
+         products_history.created_at DESC
 LIMIT @limit_data
 OFFSET @offset_page;
 

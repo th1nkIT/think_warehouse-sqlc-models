@@ -41,7 +41,7 @@ ORDER BY (CASE WHEN @order_param = 'id ASC' THEN guid END) ASC,
          (CASE WHEN @order_param = 'is_active DESC' THEN is_active END) DESC,
          (CASE WHEN @order_param = 'created_at ASC' THEN created_at END) ASC,
          (CASE WHEN @order_param = 'created_at DESC' THEN created_at END) DESC,
-         ub.created_at DESC
+         warehouse.created_at DESC
 LIMIT @limit_data
 OFFSET @offset_page;
 
