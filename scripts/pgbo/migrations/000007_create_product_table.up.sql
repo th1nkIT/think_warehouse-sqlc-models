@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS product
     name character varying(100),
     product_picture_url text,
     description character varying(150) NOT NULL,
-    is_active boolean,
     created_at timestamp without time zone NOT NULL,
     created_by character varying NOT NULL,
     updated_at timestamp without time zone,
