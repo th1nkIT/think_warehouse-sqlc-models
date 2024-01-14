@@ -17,4 +17,4 @@ CREATE TABLE IF NOT EXISTS app_key
 
 -- default insert value
 INSERT INTO app_key(name, key)
-VALUES ('think-laundry', 'th1nk-L@unDrY') ON CONFLICT DO NOTHING;
+VALUES ('wit-dev', 'w1t-d3V') ON CONFLICT DO NOTHING;
