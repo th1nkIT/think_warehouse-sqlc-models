@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS user_backoffice_role
     deleted_at timestamp without time zone,
     deleted_by character varying,
     CONSTRAINT user_backoffice_role_pkey PRIMARY KEY (id),
-    CONSTRAINT uq_level_name_role UNIQUE (level, name)
+    CONSTRAINT uq_level_name_role UNIQUE (name)
 );
 
 -- default insert value

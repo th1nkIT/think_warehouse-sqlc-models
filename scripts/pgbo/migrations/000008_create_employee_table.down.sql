@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS employee;
+DROP SEQUENCE IF EXISTS employee_id_seq;
