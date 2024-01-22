@@ -1,7 +1,7 @@
 version: "1"
 packages:
   - name: "sqlc"
-    path: "../../../think_laundry-backend/src/repository/pgbo_sqlc"
+    path: "../../../think_warehouse-backend/src/repository/pgbo_sqlc"
     queries: "./queries"
     schema: "./migrations"
     engine: "postgresql"

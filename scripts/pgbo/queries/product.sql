@@ -26,25 +26,33 @@ WHERE
 
 -- name: ListProduct :many
 SELECT
-    guid, name, product_picture_url, description, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by
-FROM product
+    p.guid, p.name, p.product_picture_url, p.description, p.created_at, p.created_by, p.updated_at, p.updated_by, p.deleted_at, p.deleted_by,
+    ub.name AS user_name, ub.guid AS user_id
+FROM
+    product p
+        LEFT JOIN user_backoffice ub ON ub.guid = p.created_by
 WHERE
-    (CASE WHEN @set_name::bool THEN LOWER(name) LIKE LOWER(@name) ELSE TRUE END)
-    AND deleted_at IS NULL
-ORDER BY (CASE WHEN @order_param = 'id ASC' THEN guid END) ASC,
-         (CASE WHEN @order_param = 'id DESC' THEN guid END) DESC,
-         (CASE WHEN @order_param = 'name ASC' THEN name END) ASC,
-         (CASE WHEN @order_param = 'name DESC' THEN name END) DESC,
-         (CASE WHEN @order_param = 'created_at ASC' THEN created_at END) ASC,
-         (CASE WHEN @order_param = 'created_at DESC' THEN created_at END) DESC,
-         product.created_at DESC
-LIMIT @limit_data
+    (CASE WHEN @set_name::bool THEN LOWER(p.name) LIKE LOWER(@name) ELSE TRUE END)
+  AND p.deleted_at IS NULL
+ORDER BY
+    (CASE WHEN @order_param = 'id ASC' THEN p.guid END) ASC,
+    (CASE WHEN @order_param = 'id DESC' THEN p.guid END) DESC,
+    (CASE WHEN @order_param = 'name ASC' THEN p.name END) ASC,
+    (CASE WHEN @order_param = 'name DESC' THEN p.name END) DESC,
+    (CASE WHEN @order_param = 'created_at ASC' THEN p.created_at END) ASC,
+    (CASE WHEN @order_param = 'created_at DESC' THEN p.created_at END) DESC,
+    p.created_at DESC
+    LIMIT @limit_data
 OFFSET @offset_page;
+
 
 -- name: GetProduct :one
 SELECT
-    guid, name, product_picture_url, description, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by
-FROM product p
+    p.guid, p.name, p.product_picture_url, p.description, p.created_at, p.created_by, p.updated_at, p.updated_by, p.deleted_at, p.deleted_by,
+    ub.name AS user_name, ub.guid AS user_id
+FROM
+    product p
+        LEFT JOIN user_backoffice ub ON ub.guid = p.created_by
 WHERE
     p.guid = @guid
   AND p.deleted_at IS NULL;
