@@ -27,10 +27,12 @@ WHERE
 -- name: ListProduct :many
 SELECT
     p.guid, p.name, p.product_picture_url, p.description, p.created_at, p.created_by, p.updated_at, p.updated_by, p.deleted_at, p.deleted_by,
-    ub.name AS user_name, ub.guid AS user_id
+    ub_created.name AS user_name, ub_created.guid AS user_id,
+    ub_updated.name AS user_name_update, ub_updated.guid AS user_id_update
 FROM
     product p
-        LEFT JOIN user_backoffice ub ON ub.guid = p.created_by
+        LEFT JOIN user_backoffice ub_created ON ub_created.guid = p.created_by
+        LEFT JOIN user_backoffice ub_updated ON ub_updated.guid = p.updated_by
 WHERE
     (CASE WHEN @set_name::bool THEN LOWER(p.name) LIKE LOWER(@name) ELSE TRUE END)
   AND p.deleted_at IS NULL
@@ -48,14 +50,18 @@ OFFSET @offset_page;
 
 -- name: GetProduct :one
 SELECT
-    p.guid, p.name, p.product_picture_url, p.description, p.created_at, p.created_by, p.updated_at, p.updated_by, p.deleted_at, p.deleted_by,
-    ub.name AS user_name, ub.guid AS user_id
+    p.guid, p.name, p.product_picture_url, p.description, p.created_at, p.created_by,
+    p.updated_at, p.updated_by, p.deleted_at, p.deleted_by,
+    ub_created.name AS user_name, ub_created.guid AS user_id,
+    ub_updated.name AS user_name_update, ub_updated.guid AS user_id_update
 FROM
     product p
-        LEFT JOIN user_backoffice ub ON ub.guid = p.created_by
+        LEFT JOIN user_backoffice ub_created ON ub_created.guid = p.created_by
+        LEFT JOIN user_backoffice ub_updated ON ub_updated.guid = p.updated_by
 WHERE
     p.guid = @guid
   AND p.deleted_at IS NULL;
+
 
 
 -- name: GetCountProductList :one
