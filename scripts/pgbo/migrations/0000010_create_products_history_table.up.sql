@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS products_history
     deleted_by character varying,
     CONSTRAINT products_history_pkey PRIMARY KEY (guid),
     CONSTRAINT product_id_fk FOREIGN KEY (product_guid) REFERENCES product(guid),
-    CONSTRAINT pegawai_masuk_fk FOREIGN KEY (pegawai_masuk) REFERENCES employee(guid),
-    CONSTRAINT pegawai_keluar_fk FOREIGN KEY (pegawai_keluar) REFERENCES employee(guid),
+    CONSTRAINT pegawai_masuk_fk FOREIGN KEY (pegawai_masuk) REFERENCES user_backoffice(guid),
+    CONSTRAINT pegawai_keluar_fk FOREIGN KEY (pegawai_keluar) REFERENCES user_backoffice(guid),
     CONSTRAINT warehouse_guid_fk FOREIGN KEY (warehouse_guid) REFERENCES warehouse(guid)
 );

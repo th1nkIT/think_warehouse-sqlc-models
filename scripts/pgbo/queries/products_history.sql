@@ -1,31 +1,36 @@
--- name: InsertMasukProductsHistory :one
+-- name: InsertProductsHistory :one
 INSERT INTO products_history
-        (guid, product_guid, quantity, warehouse_guid, tgl_masuk, pegawai_masuk, created_at, created_by)
-    VALUES
-        (@guid, @product_guid, @quantity, @warehouse_guid, (now() at time zone 'UTC')::TIMESTAMP, @pegawai_masuk, (now() at time zone 'UTC')::TIMESTAMP, @created_by)
-RETURNING product.*;
+(guid, product_guid, quantity, warehouse_guid, tgl_masuk, pegawai_masuk, created_at, created_by)
+VALUES
+    (@guid, @product_guid, @quantity, @warehouse_guid, (now() at time zone 'UTC')::TIMESTAMP, @pegawai_masuk, (now() at time zone 'UTC')::TIMESTAMP, @created_by)
+RETURNING products_history.*;
 
 -- name: InsertKeluarProductsHistory :one
 INSERT INTO products_history
         (tgl_keluar, pegawai_keluar, updated_at, updated_by)
     VALUES
         ((now() at time zone 'UTC')::TIMESTAMP, @pegawai_keluar, (now() at time zone 'UTC')::TIMESTAMP, @updated_by)
-RETURNING product.*;
+RETURNING products_history.*;
 
--- name: UpdateWarehouse :one
-UPDATE products_history 
-SET name = @new_name, 
-    product_picture_url = @new_product_picture_url, 
-    description = @new_description, 
-    updated_by = @new_created_by, 
-    updated_at = (now() at time zone 'UTC')::TIMESTAMP 
-WHERE guid = @guid; <== Belum
+-- Belum ada update
+-- -- name: UpdateWarehouse :one
+-- UPDATE products_history
+-- SET name = @new_name,
+--     product_picture_url = @new_product_picture_url,
+--     description = @new_description,
+--     updated_by = @new_created_by,
+--     updated_at = (now() at time zone 'UTC')::TIMESTAMP
+-- WHERE guid = @guid
+-- RETURNING product.*;
 
--- name: DeleteProductsHistory :one
+-- name: DeleteProductsHistory :exec
 UPDATE products_history
-SET deleted_at = (now() at time zone 'UTC')::TIMESTAMP,
-    deleted_by = @new_deleted_by
-WHERE guid = @guid;
+SET
+    deleted_at = (now() at time zone 'UTC')::TIMESTAMP,
+    deleted_by = @deleted_by
+WHERE
+    guid = @guid
+  AND deleted_at IS NULL;
 
 -- name: ListWithFilterProductHistory :many
 SELECT *

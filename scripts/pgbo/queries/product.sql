@@ -12,13 +12,17 @@ SET name = @new_name,
     description = @new_description, 
     updated_by = @new_created_by, 
     updated_at = (now() at time zone 'UTC')::TIMESTAMP 
-WHERE guid = @guid;
+WHERE guid = @guid
+RETURNING product.*;
 
--- name: DeleteProduct :one
+-- name: DeleteProduct :exec
 UPDATE product
-SET deleted_at = (now() at time zone 'UTC')::TIMESTAMP,
-    deleted_by = @new_deleted_by
-WHERE guid = @guid;
+SET
+    deleted_at = (now() at time zone 'UTC')::TIMESTAMP,
+    deleted_by = @deleted_by
+WHERE
+    guid = @guid
+  AND deleted_at IS NULL;
 
 -- name: ListWithFilter :many
 SELECT *

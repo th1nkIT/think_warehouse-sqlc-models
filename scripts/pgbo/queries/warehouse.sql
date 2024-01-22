@@ -2,8 +2,8 @@
 INSERT INTO warehouse 
         (guid, name, address, phone_number, is_active, created_at, created_by)
     VALUES
-        (@guid, @name, @phone_number, @is_active, (now() at time zone 'UTC')::TIMESTAMP, @created_by)
-RETURNING product.*;
+        (@guid, @name, @address, @phone_number, @is_active, (now() at time zone 'UTC')::TIMESTAMP, @created_by)
+RETURNING warehouse.*;
 
 -- name: UpdateWarehouse :one
 UPDATE warehouse 
@@ -13,13 +13,17 @@ SET name = @new_name,
     is_active = @is_active, 
     updated_by = @new_created_by,
     updated_at = (now() at time zone 'UTC')::TIMESTAMP 
-WHERE guid = @guid;
+WHERE guid = @guid
+RETURNING warehouse.*;
 
--- name: DeleteWarehouse :one
+-- name: DeleteWarehouse :exec
 UPDATE warehouse
-SET deleted_at = (now() at time zone 'UTC')::TIMESTAMP,
-    deleted_by = @new_deleted_by
-WHERE guid = @guid;
+SET
+    deleted_at = (now() at time zone 'UTC')::TIMESTAMP,
+    deleted_by = @deleted_by
+WHERE
+    guid = @guid
+  AND deleted_at IS NULL;
 
 -- name: ListWithFilterWarehouse :many
 SELECT *
