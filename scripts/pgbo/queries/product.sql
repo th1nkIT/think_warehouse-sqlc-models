@@ -25,7 +25,8 @@ WHERE
   AND deleted_at IS NULL;
 
 -- name: ListProduct :many
-SELECT *
+SELECT
+    guid, name, product_picture_url, description, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by
 FROM product
 WHERE
     (CASE WHEN @set_name::bool THEN LOWER(name) LIKE LOWER(@name) ELSE TRUE END)
@@ -42,7 +43,7 @@ OFFSET @offset_page;
 
 -- name: GetProduct :one
 SELECT
-    p.*
+    guid, name, product_picture_url, description, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by
 FROM product p
 WHERE
     p.guid = @guid
@@ -53,5 +54,4 @@ WHERE
 SELECT COUNT(p.id) FROM product p
 WHERE
     (CASE WHEN @set_name::bool THEN LOWER(p.name) LIKE LOWER(@name) ELSE TRUE END)
-    AND(CASE WHEN @set_description::bool THEN LOWER(p.description) LIKE LOWER(@description) ELSE TRUE END)
     AND p.deleted_at IS NULL;
