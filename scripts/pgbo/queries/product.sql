@@ -24,6 +24,18 @@ WHERE
     guid = @guid
   AND deleted_at IS NULL;
 
+-- name: ReactiveProduct :exec
+UPDATE product
+SET
+    deleted_at = NULL,
+    deleted_by = NULL,
+    updated_at = (now() at time zone 'UTC')::TIMESTAMP,
+    updated_by = @updated_by
+WHERE
+    guid = @guid
+AND deleted_at IS NOT NULL;
+
+
 -- name: ListProduct :many
 SELECT
     p.guid, p.name, p.product_picture_url, p.description, p.created_at, p.created_by, p.updated_at, p.updated_by, p.deleted_at, p.deleted_by,
@@ -35,7 +47,6 @@ FROM
         LEFT JOIN user_backoffice ub_updated ON ub_updated.guid = p.updated_by
 WHERE
     (CASE WHEN @set_name::bool THEN LOWER(p.name) LIKE LOWER(@name) ELSE TRUE END)
-  AND p.deleted_at IS NULL
 ORDER BY
     (CASE WHEN @order_param = 'id ASC' THEN p.guid END) ASC,
     (CASE WHEN @order_param = 'id DESC' THEN p.guid END) DESC,
@@ -46,7 +57,6 @@ ORDER BY
     p.created_at DESC
     LIMIT @limit_data
 OFFSET @offset_page;
-
 
 -- name: GetProduct :one
 SELECT
@@ -59,13 +69,9 @@ FROM
         LEFT JOIN user_backoffice ub_created ON ub_created.guid = p.created_by
         LEFT JOIN user_backoffice ub_updated ON ub_updated.guid = p.updated_by
 WHERE
-    p.guid = @guid
-  AND p.deleted_at IS NULL;
-
-
+    p.guid = @guid;
 
 -- name: GetCountProductList :one
 SELECT COUNT(p.id) FROM product p
 WHERE
-    (CASE WHEN @set_name::bool THEN LOWER(p.name) LIKE LOWER(@name) ELSE TRUE END)
-    AND p.deleted_at IS NULL;
+    (CASE WHEN @set_name::bool THEN LOWER(p.name) LIKE LOWER(@name) ELSE TRUE END);
