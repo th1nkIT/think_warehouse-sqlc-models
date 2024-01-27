@@ -30,6 +30,8 @@ WHERE
 -- name: DeleteProductCategory :exec
 UPDATE product_category
 SET
+    updated_at = (now() at time zone 'UTC')::TIMESTAMP,
+    updated_by = @updated_by,
     deleted_at = (now() at time zone 'UTC')::TIMESTAMP,
     deleted_by = @deleted_by
 WHERE
@@ -41,11 +43,13 @@ SELECT
     pc.guid, pc.name, pc.created_at, pc.created_by,
     pc.updated_at, pc.updated_by, pc.deleted_at, pc.deleted_by,
     ub_created.name AS user_name, ub_created.guid AS user_id,
-    ub_updated.name AS user_name_update, ub_updated.guid AS user_id_update
+    ub_updated.name AS user_name_update, ub_updated.guid AS user_id_update,
+    ub_deleted.name AS user_name_delete, ub_deleted.guid AS user_id_delete
 FROM
     product_category pc
         LEFT JOIN user_backoffice ub_created ON ub_created.guid = pc.created_by
         LEFT JOIN user_backoffice ub_updated ON ub_updated.guid = pc.updated_by
+        LEFT JOIN user_backoffice ub_deleted ON ub_deleted.guid = pc.deleted_by
 WHERE
     (CASE WHEN @set_name::bool THEN LOWER(pc.name) LIKE LOWER (@name) ELSE TRUE END)
   AND (CASE WHEN @set_active::bool THEN
@@ -67,11 +71,13 @@ SELECT
     pc.guid, pc.name, pc.created_at, pc.created_by,
     pc.updated_at, pc.updated_by, pc.deleted_at, pc.deleted_by,
     ub_created.name AS user_name, ub_created.guid AS user_id,
-    ub_updated.name AS user_name_update, ub_updated.guid AS user_id_update
+    ub_updated.name AS user_name_update, ub_updated.guid AS user_id_update,
+    ub_deleted.name AS user_name_delete, ub_deleted.guid AS user_id_delete
 FROM
     product_category pc
         LEFT JOIN user_backoffice ub_created ON ub_created.guid = pc.created_by
         LEFT JOIN user_backoffice ub_updated ON ub_updated.guid = pc.updated_by
+        LEFT JOIN user_backoffice ub_deleted ON ub_deleted.guid = pc.deleted_by
 WHERE
     pc.guid = @guid;
 
