@@ -52,7 +52,7 @@ SELECT
                     'price', pp.price,
                     'discount', pp.discount,
                     'discount_type', pp.discount_type,
-                    'is_active', (CASE WHEN pv.is_active IS NOT NULL THEN pv.is_active WHEN p.deleted_at IS NOT NULL THEN 'inactive' ELSE 'inactive' END),
+                    'is_active', (CASE WHEN pv.is_active IS NOT NULL THEN pv.is_active WHEN p.deleted_at IS NOT NULL THEN FALSE ELSE FALSE END),
                     'stock_id', (SELECT guid FROM stock WHERE product_id = p.guid AND (CASE WHEN pv.guid IS NOT NULL THEN product_variant_id = pv.guid ELSE product_variant_id IS NULL END)),
                     'stock', (SELECT stock FROM stock WHERE product_id = p.guid AND (CASE WHEN pv.guid IS NOT NULL THEN product_variant_id = pv.guid ELSE product_variant_id IS NULL END))
             )
@@ -81,7 +81,6 @@ WHERE
   AND (CASE WHEN @set_product_code::bool THEN LOWER(p.product_code) LIKE LOWER(@product_code) ELSE TRUE END)
   AND (CASE WHEN @set_description::bool THEN LOWER(p.description) LIKE LOWER(@description) ELSE TRUE END)
   AND (CASE WHEN @set_sku::bool THEN LOWER(p.product_sku) LIKE LOWER(@sku) ELSE TRUE END)
-  AND (CASE WHEN @set_is_active::bool THEN p.deleted_at = @deleted_at ELSE TRUE END)
 GROUP BY
     p.guid,
     p.product_picture_url,
@@ -94,7 +93,11 @@ GROUP BY
     p.created_by,
     p.updated_at,
     p.updated_by,
-    pc.name
+    pc.name,
+    ub_created.name,
+    ub_created.guid,
+    ub_updated.name,
+    ub_updated.guid
 ORDER BY (CASE WHEN @order_param = 'id ASC' THEN p.guid END) ASC,
          (CASE WHEN @order_param = 'id DESC' THEN p.guid END) DESC,
          (CASE WHEN @order_param = 'category_name ASC' THEN pc.name END) ASC,
@@ -107,8 +110,6 @@ ORDER BY (CASE WHEN @order_param = 'id ASC' THEN p.guid END) ASC,
          (CASE WHEN @order_param = 'description DESC' THEN p.description END) DESC,
          (CASE WHEN @order_param = 'sku ASC' THEN p.product_sku END) ASC,
          (CASE WHEN @order_param = 'sku DESC' THEN p.product_sku END) DESC,
-         (CASE WHEN @order_param = 'is_active ASC' THEN CASE WHEN p.deleted_at IS NOT NULL THEN 1 ELSE 0 END END) ASC,
-         (CASE WHEN @order_param = 'is_active DESC' THEN CASE WHEN p.deleted_at IS NOT NULL THEN 1 ELSE 0 END END) DESC,
         (CASE WHEN @order_param = 'created_at ASC' THEN p.created_at END) ASC,
          (CASE WHEN @order_param = 'created_at DESC' THEN p.created_at END) DESC,
          p.created_at DESC
