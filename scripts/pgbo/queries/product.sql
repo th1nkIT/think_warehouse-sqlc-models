@@ -80,6 +80,7 @@ WHERE
     (CASE WHEN @set_is_variant::bool THEN p.is_variant = @is_variant::bool ELSE TRUE END)
   AND (CASE WHEN @set_product_category_id::bool THEN p.category_id = @product_category_id ELSE TRUE END)
   AND (CASE WHEN @set_name::bool THEN LOWER(p.name) LIKE LOWER(@name) ELSE TRUE END)
+  AND (CASE WHEN @set_product_code::bool THEN LOWER(p.product_code) LIKE LOWER(@product_code) ELSE TRUE END)
   AND (CASE WHEN @set_description::bool THEN LOWER(p.description) LIKE LOWER(@description) ELSE TRUE END)
   AND (CASE WHEN @set_sku::bool THEN LOWER(p.product_sku) LIKE LOWER(@sku) ELSE TRUE END)
   AND (CASE WHEN @set_is_active::bool THEN p.deleted_at = @deleted_at ELSE TRUE END)
